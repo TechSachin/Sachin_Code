@@ -1,0 +1,68 @@
+Use [db name]
+Go
+Exec sp_MSForEachTable 'Update Statistics? WITH FULLSCAN'
+GO
+
+
+-- to rebuild indexes---
+Use [db name]
+Exec sp_MSForEachtable 'DBCC DBREINDEX (''?'')'
+Go
+
+
+
+A. Update all statistics on a table
+
+
+The following example updates the statistics for all indexes on the SalesOrderDetail table.
+
+
+
+USE AdventureWorks2012;
+GO
+UPDATE STATISTICS Sales.SalesOrderDetail;
+GO
+
+
+B. Update the statistics for an index
+
+
+The following example updates the statistics for the AK_SalesOrderDetail_rowguid index of the SalesOrderDetail table.
+
+
+
+USE AdventureWorks2012;
+GO
+UPDATE STATISTICS Sales.SalesOrderDetail AK_SalesOrderDetail_rowguid;
+GO
+
+
+C. Update statistics by using 50 percent sampling
+
+
+The following example creates and then updates the statistics for the Name and ProductNumber columns in the Product table.
+
+
+USE AdventureWorks2012;
+GO
+CREATE STATISTICS Products
+    ON Production.Product ([Name], ProductNumber)
+    WITH SAMPLE 50 PERCENT
+-- Time passes. The UPDATE STATISTICS statement is then executed.
+UPDATE STATISTICS Production.Product(Products) 
+    WITH SAMPLE 50 PERCENT;
+
+
+D. Update statistics by using FULLSCAN and NORECOMPUTE
+
+
+The following example updates the Products statistics in the Product table, forces a full scan of all rows in the Product table, and turns off automatic statistics for the Products statistics.
+
+
+
+USE AdventureWorks2012;
+GO
+UPDATE STATISTICS Production.Product(Products)
+    WITH FULLSCAN, NORECOMPUTE;
+GO
+
